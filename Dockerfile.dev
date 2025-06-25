@@ -1,0 +1,24 @@
+# Dockerfile.dev
+
+FROM node:lts-alpine
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Set working directory
+WORKDIR /app
+
+# Copy dependency manifests
+COPY pnpm-lock.yaml* package.json ./
+
+# Install dependencies with pnpm
+RUN pnpm install
+
+# Copy rest of the app
+COPY . .
+
+# Expose Vite dev port
+EXPOSE 5173
+
+# Run the dev server
+CMD ["pnpm", "dev"]
